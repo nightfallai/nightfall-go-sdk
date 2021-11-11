@@ -39,27 +39,27 @@ if err != nil {
 }
 
 resp, err := nc.ScanText(context.Background(), &nightfall.ScanTextRequest{
-		Payload: []string{"4242 4242 4242 4242 is my ccn"},
-		Config:  &nightfall.Config{
-            // A rule contains a set of detectors to scan with
-			DetectionRules:     []nightfall.DetectionRule{{
-                // Define some detectors to use to scan your data
-				Detectors: []nightfall.Detector{{
-					MinNumFindings:    1,
-					MinConfidence:     nightfall.ConfidencePossible,
-					DisplayName:       "cc#",
-					DetectorType:      nightfall.DetectorTypeNightfallDetector,
-					NightfallDetector: "CREDIT_CARD_NUMBER",
-				}},
-				LogicalOp: nightfall.LogicalOpAny,
-			},
-			},
-		},
-	})
-	if err != nil {
-		log.Printf("Error scanning text: %v", err)
-		return
-	}
+    Payload: []string{"4242 4242 4242 4242 is my ccn"},
+    Config:  &nightfall.Config{
+        // A rule contains a set of detectors to scan with
+        DetectionRules:     []nightfall.DetectionRule{{
+            // Define some detectors to use to scan your data
+            Detectors: []nightfall.Detector{{
+                MinNumFindings:    1,
+                MinConfidence:     nightfall.ConfidencePossible,
+                DisplayName:       "cc#",
+                DetectorType:      nightfall.DetectorTypeNightfallDetector,
+                NightfallDetector: "CREDIT_CARD_NUMBER",
+            }},
+            LogicalOp: nightfall.LogicalOpAny,
+        },
+        },
+    },
+})
+if err != nil {
+    log.Printf("Error scanning text: %v", err)
+    return
+}
 ```
 
 ### Scanning Files
