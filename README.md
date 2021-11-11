@@ -101,7 +101,7 @@ if err != nil {
 }
 
 resp, err := nc.ScanFile(context.Background(), &nightfall.ScanFileRequest{
-    Policy:           &nightfall.ScanPolicy{
+    Policy: &nightfall.ScanPolicy{
         // File scans are conducted asynchronously, so provide a webhook route to an HTTPS server to send results to.
         WebhookURL: "https://my-service.com/nightfall/listener",
         // A rule contains a set of detectors to scan with
