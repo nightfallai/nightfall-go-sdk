@@ -1,4 +1,4 @@
-module github.com/nightfallai/go-nightfall
+module github.com/nightfallai/nightfall-go-sdk
 
 go 1.18
 
