@@ -21,6 +21,7 @@ const (
 
 // Client manages communication with the Nightfall API
 type Client struct {
+	baseURL               string
 	apiKey                string
 	httpClient            *http.Client
 	fileUploadConcurrency int
@@ -39,6 +40,7 @@ var (
 // NewClient configures, validates, then creates an instance of a Nightfall Client.
 func NewClient(options ...ClientOption) (*Client, error) {
 	c := &Client{
+		baseURL:               APIURL,
 		apiKey:                os.Getenv("NIGHTFALL_API_KEY"),
 		httpClient:            &http.Client{},
 		fileUploadConcurrency: DefaultFileUploadConcurrency,

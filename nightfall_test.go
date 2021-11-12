@@ -84,3 +84,40 @@ func TestDo(t *testing.T) {
 		}
 	}
 }
+
+func TestNewClient(t *testing.T) {
+	tests := []struct {
+		name                  string
+		apiKey                string
+		fileUploadConcurrency int
+		wantErr               bool
+	}{
+		{
+			name:                  "happy path",
+			apiKey:                "some key",
+			fileUploadConcurrency: 5,
+			wantErr:               false,
+		},
+		{
+			name:                  "missing api key",
+			fileUploadConcurrency: 5,
+			wantErr:               true,
+		},
+		{
+			name:                  "file concurrency too high",
+			apiKey:                "some key",
+			fileUploadConcurrency: 101,
+			wantErr:               true,
+		},
+	}
+
+	for _, test := range tests {
+		_, err := NewClient(OptionAPIKey(test.apiKey), OptionFileUploadConcurrency(test.fileUploadConcurrency))
+		if !test.wantErr && err != nil {
+			t.Errorf("Got unexpected error: %v", err)
+		}
+		if test.wantErr && err == nil {
+			t.Error("Did not get expected error")
+		}
+	}
+}
