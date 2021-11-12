@@ -86,7 +86,7 @@ func (c *Client) ScanFile(ctx context.Context, request *ScanFileRequest) (*ScanF
 }
 
 func (c *Client) initFileUpload(ctx context.Context, request *fileUploadRequest) (*fileUploadResponse, error) {
-	req, err := c.newRequest(http.MethodPost, APIURL+"v3/upload", request)
+	req, err := c.newRequest(http.MethodPost, c.baseURL+"v3/upload", request)
 	if err != nil {
 		return nil, err
 	}
@@ -138,7 +138,7 @@ upload:
 				<-concurrencyChan
 			}()
 
-			req, err := c.newUploadRequest(http.MethodPatch, APIURL+"v3/upload/"+fileUpload.ID.String(), bytes.NewBuffer(data))
+			req, err := c.newUploadRequest(http.MethodPatch, c.baseURL+"v3/upload/"+fileUpload.ID.String(), bytes.NewBuffer(data))
 			if err != nil {
 				// If error channel is full already just discard this error, first error is most likely the most useful one anyways
 				select {
@@ -174,7 +174,7 @@ upload:
 }
 
 func (c *Client) completeFileUpload(ctx context.Context, fileUUID uuid.UUID) error {
-	req, err := c.newRequest(http.MethodPost, APIURL+"v3/upload/"+fileUUID.String()+"/finish", nil)
+	req, err := c.newRequest(http.MethodPost, c.baseURL+"v3/upload/"+fileUUID.String()+"/finish", nil)
 	if err != nil {
 		return err
 	}
@@ -183,7 +183,7 @@ func (c *Client) completeFileUpload(ctx context.Context, fileUUID uuid.UUID) err
 }
 
 func (c *Client) scanUploadedFile(ctx context.Context, request *ScanFileRequest, fileUUID uuid.UUID) (*ScanFileResponse, error) {
-	req, err := c.newRequest(http.MethodPost, APIURL+"v3/upload/"+fileUUID.String()+"/scan", request)
+	req, err := c.newRequest(http.MethodPost, c.baseURL+"v3/upload/"+fileUUID.String()+"/scan", request)
 	if err != nil {
 		return nil, err
 	}
