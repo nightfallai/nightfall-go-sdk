@@ -5,7 +5,7 @@ It allows you to add functionality to your applications to
 scan plain text and files in order to detect different categories of information. You can leverage any of
 the detectors in Nightfall's pre-built library, or you may programmatically define your own custom detectors. 
 
-Additionally, this library provides convenience features such as encapsulating the steps to chunk and upload files.
+Additionally, this library provides convenient features including the steps to chunk and upload files.
 
 To obtain an API Key, login to the [Nightfall dashboard](https://app.nightfall.ai/) and click the section
 titled "Manage API Keys".
@@ -64,7 +64,7 @@ if err != nil {
 
 ### Scanning Files
 
-Scanning common file types like PDF's or office documents typically requires cumbersome text
+Scanning common file types like PDFs or office documents typically requires cumbersome text
 extraction methods like OCR.
 
 Rather than implementing this functionality yourself, the Nightfall API allows you to upload the
