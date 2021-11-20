@@ -5,10 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"runtime/debug"
 	"time"
 )
 
@@ -35,6 +37,8 @@ var (
 	errMissingAPIKey                = errors.New("missing api key")
 	errInvalidFileUploadConcurrency = errors.New("fileUploadConcurrency must be in range [1,100]")
 	errRetryable429                 = errors.New("429 retryable error")
+
+	userAgent = loadUserAgent()
 )
 
 // NewClient configures, validates, then creates an instance of a Nightfall Client.
@@ -88,6 +92,22 @@ func OptionFileUploadConcurrency(fileUploadConcurrency int) func(*Client) error 
 	}
 }
 
+func loadUserAgent() string {
+	prefix := "nightfall-go-sdk"
+
+	buildInfo, ok := debug.ReadBuildInfo()
+	if !ok {
+		return prefix
+	}
+	for _, dep := range buildInfo.Deps {
+		if dep.Path == "github.com/nightfallai/nightfall-go-sdk" {
+			return fmt.Sprintf("%s/%s", prefix, dep.Version)
+		}
+	}
+
+	return prefix
+}
+
 func (c *Client) newRequest(method, urlStr string, body interface{}) (*http.Request, error) {
 	var buf io.ReadWriter
 	if body != nil {
@@ -107,6 +127,7 @@ func (c *Client) newRequest(method, urlStr string, body interface{}) (*http.Requ
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
+	req.Header.Set("User-Agent", userAgent)
 
 	return req, nil
 }
@@ -118,6 +139,7 @@ func (c *Client) newUploadRequest(method, urlStr string, reader io.Reader) (*htt
 	}
 	req.Header.Set("Content-Type", "application/octet-stream")
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
+	req.Header.Set("User-Agent", userAgent)
 
 	return req, nil
 }
