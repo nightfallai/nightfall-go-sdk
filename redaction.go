@@ -8,10 +8,10 @@ package nightfall
 //  3. Substitution: replacing the finding with a custom string, such as "oh no!"
 //  4. Encryption: encrypting the finding with an RSA public key
 type RedactionConfig struct {
-	MaskConfig                 *MaskConfig                 `json:"maskConfig"`
-	InfoTypeSubstitutionConfig *InfoTypeSubstitutionConfig `json:"infoTypeSubstitutionConfig"`
-	SubstitutionConfig         *SubstitutionConfig         `json:"substitutionConfig"`
-	CryptoConfig               *CryptoConfig               `json:"cryptoConfig"`
+	MaskConfig                 *MaskConfig                 `json:"maskConfig,omitempty"`
+	InfoTypeSubstitutionConfig *InfoTypeSubstitutionConfig `json:"infoTypeSubstitutionConfig,omitempty"`
+	SubstitutionConfig         *SubstitutionConfig         `json:"substitutionConfig,omitempty"`
+	CryptoConfig               *CryptoConfig               `json:"cryptoConfig,omitempty"`
 	RemoveFinding              bool                        `json:"removeFinding"`
 }
 
