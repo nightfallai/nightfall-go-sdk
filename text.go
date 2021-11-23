@@ -31,11 +31,13 @@ type Config struct {
 // An object representing an occurrence of a configured detector (i.e. finding) in the provided data.
 type Finding struct {
 	Finding                   string           `json:"finding"`
+	RedactedFinding           string           `json:"redactedFinding"`
 	BeforeContext             string           `json:"beforeContext,omitempty"`
 	AfterContext              string           `json:"afterContext,omitempty"`
 	Detector                  DetectorMetadata `json:"detector"`
 	Confidence                string           `json:"confidence"`
 	Location                  *Location        `json:"location"`
+	RedactedLocation          *Location        `json:"redactedLocation"`
 	MatchedDetectionRuleUUIDs []string         `json:"matchedDetectionRuleUUIDs"`
 	MatchedDetectionRules     []string         `json:"matchedDetectionRules"`
 }
