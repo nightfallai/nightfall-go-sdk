@@ -17,7 +17,8 @@ type ScanTextRequest struct {
 // corresponds one-to-one with the input request payload, so all findings stored in a given sub-list
 // refer to matches that occurred in the ith index of the request payload.
 type ScanTextResponse struct {
-	Findings [][]*Finding `json:"findings"`
+	Findings        [][]*Finding `json:"findings"`
+	RedactedPayload []string     `json:"redactedPayload"`
 }
 
 // The configuration object to use when scanning inline plaintext with the Nightfall API.
@@ -69,3 +70,4 @@ func (c *Client) ScanText(ctx context.Context, request *ScanTextRequest) (*ScanT
 
 	return scanResponse, nil
 }
+
