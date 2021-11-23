@@ -36,4 +36,3 @@ type SubstitutionConfig struct {
 type CryptoConfig struct {
 	PublicKey string `json:"publicKey"`
 }
-

@@ -70,4 +70,3 @@ func (c *Client) ScanText(ctx context.Context, request *ScanTextRequest) (*ScanT
 
 	return scanResponse, nil
 }
-

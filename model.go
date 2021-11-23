@@ -111,4 +111,3 @@ type DetectorMetadata struct {
 	DisplayName  string    `json:"name"`
 	DetectorUuid uuid.UUID `json:"uuid"`
 }
-
