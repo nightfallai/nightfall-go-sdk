@@ -17,7 +17,8 @@ type ScanTextRequest struct {
 // corresponds one-to-one with the input request payload, so all findings stored in a given sub-list
 // refer to matches that occurred in the ith index of the request payload.
 type ScanTextResponse struct {
-	Findings [][]*Finding `json:"findings"`
+	Findings        [][]*Finding `json:"findings"`
+	RedactedPayload []string     `json:"redactedPayload"`
 }
 
 // The configuration object to use when scanning inline plaintext with the Nightfall API.
@@ -30,11 +31,13 @@ type Config struct {
 // An object representing an occurrence of a configured detector (i.e. finding) in the provided data.
 type Finding struct {
 	Finding                   string           `json:"finding"`
+	RedactedFinding           string           `json:"redactedFinding"`
 	BeforeContext             string           `json:"beforeContext,omitempty"`
 	AfterContext              string           `json:"afterContext,omitempty"`
 	Detector                  DetectorMetadata `json:"detector"`
 	Confidence                string           `json:"confidence"`
 	Location                  *Location        `json:"location"`
+	RedactedLocation          *Location        `json:"redactedLocation"`
 	MatchedDetectionRuleUUIDs []string         `json:"matchedDetectionRuleUUIDs"`
 	MatchedDetectionRules     []string         `json:"matchedDetectionRules"`
 }

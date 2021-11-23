@@ -47,19 +47,20 @@ type DetectionRule struct {
 	LogicalOp LogicalOp  `json:"logicalOp"`
 }
 
-// An object that represents a data type or category of information. Detectors are used to scan content
+// A Detector represents a data type or category of information. Detectors are used to scan content
 // for findings.
 type Detector struct {
-	DetectorUUID      uuid.UUID       `json:"detectorUUID"`
-	MinNumFindings    int             `json:"minNumFindings"`
-	MinConfidence     Confidence      `json:"minConfidence"`
-	DisplayName       string          `json:"displayName"`
-	DetectorType      DetectorType    `json:"detectorType"`
-	NightfallDetector string          `json:"nightfallDetector"`
-	Regex             *Regex          `json:"regex"`
-	WordList          *WordList       `json:"wordList"`
-	ContextRules      []ContextRule   `json:"contextRules"`
-	ExclusionRules    []ExclusionRule `json:"exclusionRules"`
+	DetectorUUID      uuid.UUID        `json:"detectorUUID"`
+	MinNumFindings    int              `json:"minNumFindings"`
+	MinConfidence     Confidence       `json:"minConfidence"`
+	DisplayName       string           `json:"displayName"`
+	DetectorType      DetectorType     `json:"detectorType"`
+	NightfallDetector string           `json:"nightfallDetector"`
+	Regex             *Regex           `json:"regex,omitempty"`
+	WordList          *WordList        `json:"wordList,omitempty"`
+	ContextRules      []ContextRule    `json:"contextRules"`
+	ExclusionRules    []ExclusionRule  `json:"exclusionRules"`
+	RedactionConfig   *RedactionConfig `json:"redactionConfig,omitempty"`
 }
 
 // An object that describes a regular expression or list of keywords that may be used to disqualify a
