@@ -18,13 +18,13 @@ import (
 type ScanPolicy struct {
 	WebhookURL         string          `json:"webhookURL"`
 	DetectionRules     []DetectionRule `json:"detectionRules"`
-	DetectionRuleUUIDs []uuid.UUID     `json:"detectionRuleUUIDs"`
+	DetectionRuleUUIDs []string        `json:"detectionRuleUUIDs"`
 }
 
 // A container for a request to scan a file that was uploaded via the Nightfall API. Exactly one of
 // PolicyUUID or Policy should be provided.
 type ScanFileRequest struct {
-	PolicyUUID       *uuid.UUID    `json:"policyUUID"`
+	PolicyUUID       *string       `json:"policyUUID"`
 	Policy           *ScanPolicy   `json:"policy"`
 	RequestMetadata  string        `json:"requestMetadata"`
 	Content          io.Reader     `json:"-"`
@@ -34,8 +34,8 @@ type ScanFileRequest struct {
 
 // The object returned by the Nightfall API when an (asynchronous) file scan request was successfully triggered.
 type ScanFileResponse struct {
-	ID      uuid.UUID `json:"id"`
-	Message string    `json:"message"`
+	ID      string `json:"id"`
+	Message string `json:"message"`
 }
 
 type fileUploadResponse struct {
@@ -49,8 +49,8 @@ type fileUploadRequest struct {
 	FileSizeBytes int64 `json:"fileSizeBytes"`
 }
 
-// A convenience method that abstracts the details of the multi-step file upload and scan process. In other words,
-// calling this method for a given file is equivalent to (1) manually initializing a file upload session,
+// A convenience method that abstracts the details of the multi-step file upload and scan process.
+// Calling this method for a given file is equivalent to (1) manually initializing a file upload session,
 // (2) uploading all chunks of the file, (3) completing the upload, and (4) triggering a scan of the file.
 //
 // The maximum allowed ContentSizeBytes is dependent on the terms of your current

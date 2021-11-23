@@ -3,8 +3,6 @@ package nightfall
 import (
 	"context"
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 // An object representing a request to scan inline plaintext with the Nightfall API.
@@ -24,7 +22,7 @@ type ScanTextResponse struct {
 // The configuration object to use when scanning inline plaintext with the Nightfall API.
 type Config struct {
 	DetectionRules     []DetectionRule `json:"detectionRules"`
-	DetectionRuleUUIDs []uuid.UUID     `json:"detectionRuleUUIDs"`
+	DetectionRuleUUIDs []string        `json:"detectionRuleUUIDs"`
 	ContextBytes       int             `json:"contextBytes"`
 }
 

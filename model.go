@@ -1,7 +1,5 @@
 package nightfall
 
-import "github.com/google/uuid"
-
 const (
 	DetectorTypeNightfallDetector DetectorType = "NIGHTFALL_DETECTOR"
 	DetectorTypeRegex             DetectorType = "REGEX"
@@ -50,7 +48,7 @@ type DetectionRule struct {
 // A Detector represents a data type or category of information. Detectors are used to scan content
 // for findings.
 type Detector struct {
-	DetectorUUID      uuid.UUID        `json:"detectorUUID"`
+	DetectorUUID      string           `json:"detectorUUID,omitempty"`
 	MinNumFindings    int              `json:"minNumFindings"`
 	MinConfidence     Confidence       `json:"minConfidence"`
 	DisplayName       string           `json:"displayName"`
@@ -108,6 +106,6 @@ type ConfidenceAdjustment struct {
 // A container for minimal information representing a detector. A detector may be uniquely identified by its UUID;
 // the name field helps provide human-readability.
 type DetectorMetadata struct {
-	DisplayName  string    `json:"name"`
-	DetectorUuid uuid.UUID `json:"uuid"`
+	DisplayName  string `json:"name"`
+	DetectorUuid string `json:"uuid"`
 }

@@ -38,28 +38,30 @@ func TestScanText(t *testing.T) {
 	client.baseURL = s.URL + "/"
 
 	for _, test := range tests {
-		s.Config.Handler = test.handler
-		_, err = client.ScanText(context.Background(), &ScanTextRequest{
-			Payload: []string{"4242 4242 4242 4242"},
-			Config: &Config{
-				DetectionRules: []DetectionRule{{
-					Detectors: []Detector{{
-						MinNumFindings:    1,
-						MinConfidence:     ConfidencePossible,
-						DisplayName:       "cc#",
-						DetectorType:      DetectorTypeNightfallDetector,
-						NightfallDetector: "CREDIT_CARD_NUMBER",
-					}},
-					LogicalOp: LogicalOpAny,
+		t.Run(test.name, func(t *testing.T) {
+			s.Config.Handler = test.handler
+			_, err = client.ScanText(context.Background(), &ScanTextRequest{
+				Payload: []string{"4242 4242 4242 4242"},
+				Config: &Config{
+					DetectionRules: []DetectionRule{{
+						Detectors: []Detector{{
+							MinNumFindings:    1,
+							MinConfidence:     ConfidencePossible,
+							DisplayName:       "cc#",
+							DetectorType:      DetectorTypeNightfallDetector,
+							NightfallDetector: "CREDIT_CARD_NUMBER",
+						}},
+						LogicalOp: LogicalOpAny,
+					},
+					},
 				},
-				},
-			},
+			})
+			if !test.wantErr && err != nil {
+				t.Errorf("Got unexpected error: %v", err)
+			}
+			if test.wantErr && err == nil {
+				t.Error("Did not get expected error")
+			}
 		})
-		if !test.wantErr && err != nil {
-			t.Errorf("Got unexpected error: %v", err)
-		}
-		if test.wantErr && err == nil {
-			t.Error("Did not get expected error")
-		}
 	}
 }

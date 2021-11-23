@@ -70,18 +70,20 @@ func TestDo(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		callCount = 0
-		s.Config.Handler = test.handler
-		err = client.do(context.Background(), req, nil)
-		if !test.wantErr && err != nil {
-			t.Errorf("Got unexpected error: %v", err)
-		}
-		if test.wantErr && err == nil {
-			t.Error("Did not get expected error")
-		}
-		if callCount != test.expCalls {
-			t.Error("Did not call expected number of times")
-		}
+		t.Run(test.name, func(t *testing.T) {
+			callCount = 0
+			s.Config.Handler = test.handler
+			err = client.do(context.Background(), req, nil)
+			if !test.wantErr && err != nil {
+				t.Errorf("Got unexpected error: %v", err)
+			}
+			if test.wantErr && err == nil {
+				t.Error("Did not get expected error")
+			}
+			if callCount != test.expCalls {
+				t.Error("Did not call expected number of times")
+			}
+		})
 	}
 }
 
@@ -112,12 +114,14 @@ func TestNewClient(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_, err := NewClient(OptionAPIKey(test.apiKey), OptionFileUploadConcurrency(test.fileUploadConcurrency))
-		if !test.wantErr && err != nil {
-			t.Errorf("Got unexpected error: %v", err)
-		}
-		if test.wantErr && err == nil {
-			t.Error("Did not get expected error")
-		}
+		t.Run(test.name, func(t *testing.T) {
+			_, err := NewClient(OptionAPIKey(test.apiKey), OptionFileUploadConcurrency(test.fileUploadConcurrency))
+			if !test.wantErr && err != nil {
+				t.Errorf("Got unexpected error: %v", err)
+			}
+			if test.wantErr && err == nil {
+				t.Error("Did not get expected error")
+			}
+		})
 	}
 }
