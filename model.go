@@ -107,5 +107,5 @@ type ConfidenceAdjustment struct {
 // the name field helps provide human-readability.
 type DetectorMetadata struct {
 	DisplayName  string `json:"name"`
-	DetectorUuid string `json:"uuid"`
+	DetectorUUID string `json:"uuid"`
 }
