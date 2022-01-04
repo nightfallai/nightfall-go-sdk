@@ -5,13 +5,13 @@ import (
 	"net/http"
 )
 
-// An object representing a request to scan inline plaintext with the Nightfall API.
+// ScanTextRequest is the request struct to scan inline plaintext with the Nightfall API.
 type ScanTextRequest struct {
 	Payload []string `json:"payload"`
 	Config  *Config  `json:"config"`
 }
 
-// The response object returned by a text scan request. Each index i in the field findings
+// ScanTextResponse is the response object returned by a text scan request. Each index i in the field `findings`
 // corresponds one-to-one with the input request payload, so all findings stored in a given sub-list
 // refer to matches that occurred in the ith index of the request payload.
 type ScanTextResponse struct {
@@ -19,14 +19,15 @@ type ScanTextResponse struct {
 	RedactedPayload []string     `json:"redactedPayload"`
 }
 
-// The configuration object to use when scanning inline plaintext with the Nightfall API.
+// Config is the configuration object to use when scanning inline plaintext with the Nightfall API.
 type Config struct {
-	DetectionRules     []DetectionRule `json:"detectionRules"`
-	DetectionRuleUUIDs []string        `json:"detectionRuleUUIDs"`
-	ContextBytes       int             `json:"contextBytes"`
+	DetectionRules         []DetectionRule  `json:"detectionRules"`
+	DetectionRuleUUIDs     []string         `json:"detectionRuleUUIDs"`
+	ContextBytes           int              `json:"contextBytes"`
+	DefaultRedactionConfig *RedactionConfig `json:"defaultRedactionConfig"`
 }
 
-// An object representing an occurrence of a configured detector (i.e. finding) in the provided data.
+// Finding represents an occurrence of a configured detector (i.e. finding) in the provided data.
 type Finding struct {
 	Finding                   string           `json:"finding"`
 	RedactedFinding           string           `json:"redactedFinding"`
@@ -40,20 +41,20 @@ type Finding struct {
 	MatchedDetectionRules     []string         `json:"matchedDetectionRules"`
 }
 
-// An object representing where a finding was discovered in content.
+// Location represents where a finding was discovered in content.
 type Location struct {
 	ByteRange      *Range `json:"byteRange"`
 	CodepointRange *Range `json:"codepointRange"`
 }
 
-// An object that contains references to the start and end of the eponymous range.
+// Range contains references to the start and end of the eponymous range.
 type Range struct {
 	Start int64 `json:"start"`
 	End   int64 `json:"end"`
 }
 
-// Scans the provided plaintext against the provided detectors, and returns all findings. The response object will
-// contain a list of lists representing the findings. Each index i in the findings array will
+// ScanText scans the provided plaintext against the provided detectors, and returns all findings. The response
+// object will contain a list of lists representing the findings. Each index i in the findings array will
 // correspond one-to-one with the input request payload list, so all findings stored in a given sub-list refer to
 // matches that occurred in the ith index of the request payload.
 func (c *Client) ScanText(ctx context.Context, request *ScanTextRequest) (*ScanTextResponse, error) {
