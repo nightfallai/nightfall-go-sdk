@@ -52,7 +52,13 @@ func TestScanText(t *testing.T) {
 							NightfallDetector: "CREDIT_CARD_NUMBER",
 						}},
 						LogicalOp: LogicalOpAny,
-					},
+					}},
+					DefaultRedactionConfig: &RedactionConfig{
+						MaskConfig: &MaskConfig{
+							MaskingChar:   "🤫",
+							CharsToIgnore: []string{"-"},
+						},
+						RemoveFinding: true,
 					},
 				},
 			})
