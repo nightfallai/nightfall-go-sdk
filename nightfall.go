@@ -81,7 +81,7 @@ func OptionHTTPClient(client *http.Client) func(*Client) error {
 	}
 }
 
-// OptionHTTPClient sets the number of goroutines that will upload chunks of data when scanning files with the Nightfall client
+// OptionFileUploadConcurrency sets the number of goroutines that will upload chunks of data when scanning files with the Nightfall client
 func OptionFileUploadConcurrency(fileUploadConcurrency int) func(*Client) error {
 	return func(c *Client) error {
 		if fileUploadConcurrency > 100 || fileUploadConcurrency <= 0 {
