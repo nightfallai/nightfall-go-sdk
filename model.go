@@ -35,7 +35,7 @@ type (
 	Confidence    string
 )
 
-// An object that contains a set of detectors to be used when scanning content. Findings matches are
+// DetectionRule is an object that contains a set of detectors to be used when scanning content. Findings matches are
 // triggered according to the provided logicalOp; valid values are ANY(logical
 // OR, i.e. a finding is emitted only if any of the provided detectors match), or ALL
 // (logical AND, i.e. a finding is emitted only if all provided detectors match).
@@ -61,7 +61,7 @@ type Detector struct {
 	RedactionConfig   *RedactionConfig `json:"redactionConfig,omitempty"`
 }
 
-// An object that describes a regular expression or list of keywords that may be used to disqualify a
+// An ExclusionRule describes a regular expression or list of keywords that may be used to disqualify a
 // candidate finding from triggering a detector match.
 type ExclusionRule struct {
 	MatchType     MatchType     `json:"matchType"`
@@ -70,7 +70,7 @@ type ExclusionRule struct {
 	WordList      *WordList     `json:"wordList"`
 }
 
-// An object that describes how a regular expression may be used to adjust the confidence of a candidate finding.
+// A ContextRule describes how a regular expression may be used to adjust the confidence of a candidate finding.
 // This context rule will be applied within the provided byte proximity, and if the regular expression matches, then
 // the confidence associated with the finding will be adjusted to the value prescribed.
 type ContextRule struct {
@@ -79,32 +79,32 @@ type ContextRule struct {
 	ConfidenceAdjustment ConfidenceAdjustment `json:"confidenceAdjustment"`
 }
 
-// An object representing a regular expression to customize the behavior of a detector while Nightfall performs a scan.
+// A Regex represents a regular expression to customize the behavior of a detector while Nightfall performs a scan.
 type Regex struct {
 	Pattern         string `json:"pattern"`
 	IsCaseSensitive bool   `json:"isCaseSensitive"`
 }
 
-// A list of words that can be used to customize the behavior of a detector while Nightfall performs a scan.
+// A WordList is a list of words that can be used to customize the behavior of a detector while Nightfall performs a scan.
 type WordList struct {
 	Values          []string `json:"values"`
 	IsCaseSensitive bool     `json:"isCaseSensitive"`
 }
 
-// An object representing a range of bytes to consider around a candidate finding.
+// Proximity represents a range of bytes to consider around a candidate finding.
 type Proximity struct {
 	WindowBefore int `json:"windowBefore"`
 	WindowAfter  int `json:"windowAfter"`
 }
 
-// Describes how to adjust confidence on a given finding. Valid values for the adjustment are
+// ConfidenceAdjustment describes how to adjust confidence on a given finding. Valid values for the adjustment are
 // VERY_UNLIKELY, UNLIKELY, POSSIBLE, LIKELY, and VERY_LIKELY.
 type ConfidenceAdjustment struct {
 	FixedConfidence Confidence `json:"fixedConfidence"`
 }
 
-// A container for minimal information representing a detector. A detector may be uniquely identified by its UUID;
-// the name field helps provide human-readability.
+// DetectorMetadata contains the minimal information representing a detector. A detector may be uniquely
+// identified by its UUID; the name field helps provide human-readability.
 type DetectorMetadata struct {
 	DisplayName  string `json:"name"`
 	DetectorUUID string `json:"uuid"`

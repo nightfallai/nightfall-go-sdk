@@ -42,7 +42,7 @@ func TestScanText(t *testing.T) {
 			s.Config.Handler = test.handler
 			_, err = client.ScanText(context.Background(), &ScanTextRequest{
 				Payload: []string{"4242 4242 4242 4242"},
-				Config: &Config{
+				Policy: &Config{
 					DetectionRules: []DetectionRule{{
 						Detectors: []Detector{{
 							MinNumFindings:    1,

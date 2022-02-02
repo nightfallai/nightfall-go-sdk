@@ -7,8 +7,10 @@ import (
 
 // ScanTextRequest is the request struct to scan inline plaintext with the Nightfall API.
 type ScanTextRequest struct {
-	Payload []string `json:"payload"`
-	Config  *Config  `json:"config"`
+	Payload     []string `json:"payload"`
+	Config      *Config  `json:"config"` // Deprecated; use Policy instead
+	Policy      *Config  `json:"policy"`
+	PolicyUUIDs []string `json:"policyUUIDs"`
 }
 
 // ScanTextResponse is the response object returned by a text scan request. Each index i in the field `findings`
@@ -19,7 +21,8 @@ type ScanTextResponse struct {
 	RedactedPayload []string     `json:"redactedPayload"`
 }
 
-// Config is the configuration object to use when scanning inline plaintext with the Nightfall API.
+// Config is the configuration object to use when scanning inline plaintext with the Nightfall API. This
+// object represents an inline policy.
 type Config struct {
 	DetectionRules         []DetectionRule  `json:"detectionRules"`
 	DetectionRuleUUIDs     []string         `json:"detectionRuleUUIDs"`
