@@ -45,6 +45,7 @@ type Finding struct {
 type Location struct {
 	ByteRange      *Range `json:"byteRange"`
 	CodepointRange *Range `json:"codepointRange"`
+	CommitHash     string `json:"commitHash"`
 }
 
 // Range contains references to the start and end of the eponymous range.
