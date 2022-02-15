@@ -45,9 +45,12 @@ type Finding struct {
 }
 
 // Location represents where a finding was discovered in content.
+// The Range fields may be null depending on whether a finding is tabular or not.
 type Location struct {
 	ByteRange      *Range `json:"byteRange"`
 	CodepointRange *Range `json:"codepointRange"`
+	RowRange       *Range `json:"rowRange"`
+	ColumnRange    *Range `json:"columnRange"`
 	CommitHash     string `json:"commitHash"`
 }
 
