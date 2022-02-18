@@ -28,6 +28,7 @@ type Config struct {
 	DetectionRuleUUIDs     []string         `json:"detectionRuleUUIDs"`
 	ContextBytes           int              `json:"contextBytes"`
 	DefaultRedactionConfig *RedactionConfig `json:"defaultRedactionConfig"`
+	AlertConfig            *AlertConfig     `json:"alertConfig"`
 }
 
 // Finding represents an occurrence of a configured detector (i.e. finding) in the provided data.
