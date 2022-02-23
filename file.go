@@ -12,16 +12,17 @@ import (
 	"github.com/google/uuid"
 )
 
-// An object containing configuration that describes how to scan a file. Since the file is scanned asynchronously,
+// ScanPolicy contains configuration that describes how to scan a file. Since the file is scanned asynchronously,
 // the results from the scan are delivered to the provided webhook URL. The scan configuration may contain both
 // inline detection rule definitions and UUID's referring to existing detection rules (up to 10 of each).
 type ScanPolicy struct {
-	WebhookURL         string          `json:"webhookURL"`
+	WebhookURL         string          `json:"webhookURL"` // Deprecated: use AlertConfig instead
 	DetectionRules     []DetectionRule `json:"detectionRules"`
 	DetectionRuleUUIDs []string        `json:"detectionRuleUUIDs"`
+	AlertConfig        *AlertConfig    `json:"alertConfig"`
 }
 
-// A container for a request to scan a file that was uploaded via the Nightfall API. Exactly one of
+// ScanFileRequest represents a request to scan a file that was uploaded via the Nightfall API. Exactly one of
 // PolicyUUID or Policy should be provided.
 type ScanFileRequest struct {
 	PolicyUUID       *string       `json:"policyUUID"`
@@ -32,7 +33,8 @@ type ScanFileRequest struct {
 	Timeout          time.Duration `json:"-"`
 }
 
-// The object returned by the Nightfall API when an (asynchronous) file scan request was successfully triggered.
+// ScanFileResponse is the object returned by the Nightfall API when an (asynchronous) file scan request
+// was successfully triggered.
 type ScanFileResponse struct {
 	ID      string `json:"id"`
 	Message string `json:"message"`
@@ -49,7 +51,7 @@ type fileUploadRequest struct {
 	FileSizeBytes int64 `json:"fileSizeBytes"`
 }
 
-// A convenience method that abstracts the details of the multi-step file upload and scan process.
+// ScanFile is a convenience method that abstracts the details of the multi-step file upload and scan process.
 // Calling this method for a given file is equivalent to (1) manually initializing a file upload session,
 // (2) uploading all chunks of the file, (3) completing the upload, and (4) triggering a scan of the file.
 //
