@@ -31,36 +31,7 @@ Nightfall provides pre-built detector types, covering data types ranging from PI
 snippet shows an example of how to scan using pre-built detectors.
 
 ####  Sample Code
-```go
-nc, err := nightfall.NewClient()
-if err != nil {
-    log.Printf("Error initializing client: %v", err)
-    return
-}
-
-resp, err := nc.ScanText(context.Background(), &nightfall.ScanTextRequest{
-    Payload: []string{"4242 4242 4242 4242 is my ccn"},
-    Config:  &nightfall.Config{
-        // A rule contains a set of detectors to scan with
-        DetectionRules:     []nightfall.DetectionRule{{
-            // Define some detectors to use to scan your data
-            Detectors: []nightfall.Detector{{
-                MinNumFindings:    1,
-                MinConfidence:     nightfall.ConfidencePossible,
-                DisplayName:       "cc#",
-                DetectorType:      nightfall.DetectorTypeNightfallDetector,
-                NightfallDetector: "CREDIT_CARD_NUMBER",
-            }},
-            LogicalOp: nightfall.LogicalOpAny,
-        },
-        },
-    },
-})
-if err != nil {
-    log.Printf("Error scanning text: %v", err)
-    return
-}
-```
+See [examples/text/text\_scanner.go](examples/text/text_scanner.go) for an example
 
 ### Scanning Files
 
@@ -80,51 +51,5 @@ The results from the scan are delivered by webhook; for more information about s
 
 #### Sample Code
 
-```go
-nc, err := nightfall.NewClient()
-if err != nil {
-    log.Printf("Error initializing client: %v", err)
-    return
-}
+See [examples/file/file\_scanner.go](examples/file/file_scanner.go) for an example
 
-f, err := os.Open("./ccn.txt")
-if err != nil {
-    log.Printf("Error opening file: %v", err)
-    return
-}
-defer f.Close()
-
-fi, err := f.Stat()
-if err != nil {
-    log.Printf("Error getting file info: %v", err)
-    return
-}
-
-resp, err := nc.ScanFile(context.Background(), &nightfall.ScanFileRequest{
-    Policy: &nightfall.ScanPolicy{
-        // File scans are conducted asynchronously, so provide a webhook route to an HTTPS server to send results to.
-        WebhookURL: "https://my-service.com/nightfall/listener",
-        // A rule contains a set of detectors to scan with
-        DetectionRules: []nightfall.DetectionRule{{
-            // Define some detectors to use to scan your data
-            Detectors: []nightfall.Detector{{
-                MinNumFindings:    1,
-                MinConfidence:     nightfall.ConfidencePossible,
-                DisplayName:       "cc#",
-                DetectorType:      nightfall.DetectorTypeNightfallDetector,
-                NightfallDetector: "CREDIT_CARD_NUMBER",
-            }},
-            LogicalOp: nightfall.LogicalOpAny,
-        },
-        },
-    },
-    RequestMetadata: "{\"hello\": \"world\", \"goodnight\": \"moon\"}",
-    Content:          f,
-    ContentSizeBytes: fi.Size(),
-    Timeout:          0,
-})
-if err != nil {
-    log.Printf("Error scanning file: %v", err)
-    return
-}
-```
