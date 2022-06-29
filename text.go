@@ -43,6 +43,17 @@ type Finding struct {
 	RedactedLocation          *Location        `json:"redactedLocation"`
 	MatchedDetectionRuleUUIDs []string         `json:"matchedDetectionRuleUUIDs"`
 	MatchedDetectionRules     []string         `json:"matchedDetectionRules"`
+	FindingMetadata           *FindingMetadata `json:"findingMetadata,omitempty"`
+}
+
+type FindingMetadata struct {
+	APIKeyMetadata *APIKeyMetadata `json:"apiKeyMetadata,omitempty"`
+}
+
+type APIKeyMetadata struct {
+	Status      string `json:"status,omitempty"`
+	Kind        string `json:"kind,omitempty"`
+	Description string `json:"description,omitempty"`
 }
 
 // Location represents where a finding was discovered in content.
