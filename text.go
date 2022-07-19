@@ -53,6 +53,7 @@ type Location struct {
 	RowRange       *Range `json:"rowRange"`
 	ColumnRange    *Range `json:"columnRange"`
 	CommitHash     string `json:"commitHash"`
+	CommitAuthor   string `json:"commitAuthor"`
 }
 
 // Range contains references to the start and end of the eponymous range.
