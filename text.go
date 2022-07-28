@@ -35,14 +35,25 @@ type Config struct {
 type Finding struct {
 	Finding                   string           `json:"finding"`
 	RedactedFinding           string           `json:"redactedFinding"`
-	BeforeContext             string           `json:"beforeContext,omitempty"`
-	AfterContext              string           `json:"afterContext,omitempty"`
+	BeforeContext             string           `json:"beforeContext"`
+	AfterContext              string           `json:"afterContext"`
 	Detector                  DetectorMetadata `json:"detector"`
 	Confidence                string           `json:"confidence"`
 	Location                  *Location        `json:"location"`
 	RedactedLocation          *Location        `json:"redactedLocation"`
 	MatchedDetectionRuleUUIDs []string         `json:"matchedDetectionRuleUUIDs"`
 	MatchedDetectionRules     []string         `json:"matchedDetectionRules"`
+	FindingMetadata           *FindingMetadata `json:"findingMetadata"`
+}
+
+type FindingMetadata struct {
+	APIKeyMetadata *APIKeyMetadata `json:"apiKeyMetadata"`
+}
+
+type APIKeyMetadata struct {
+	Status      string `json:"status"`
+	Kind        string `json:"kind"`
+	Description string `json:"description"`
 }
 
 // Location represents where a finding was discovered in content.
