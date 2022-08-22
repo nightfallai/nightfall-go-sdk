@@ -78,13 +78,19 @@ type Range struct {
 // correspond one-to-one with the input request payload list, so all findings stored in a given sub-list refer to
 // matches that occurred in the ith index of the request payload.
 func (c *Client) ScanText(ctx context.Context, request *ScanTextRequest) (*ScanTextResponse, error) {
-	req, err := c.newRequest(http.MethodPost, c.baseURL+"v3/scan", request)
+	body, err := encodeBodyAsJSON(request)
 	if err != nil {
 		return nil, err
 	}
+	reqParams := requestParams{
+		method:  http.MethodPost,
+		url:     c.baseURL + "v3/scan",
+		body:    body,
+		headers: c.defaultHeaders(),
+	}
 
 	scanResponse := &ScanTextResponse{}
-	err = c.do(ctx, req, scanResponse)
+	err = c.do(ctx, reqParams, scanResponse)
 	if err != nil {
 		return nil, err
 	}

@@ -1,11 +1,9 @@
 package nightfall
 
 import (
-	"bytes"
 	"context"
 	"io"
 	"net/http"
-	"strconv"
 	"sync"
 	"time"
 
@@ -88,13 +86,19 @@ func (c *Client) ScanFile(ctx context.Context, request *ScanFileRequest) (*ScanF
 }
 
 func (c *Client) initFileUpload(ctx context.Context, request *fileUploadRequest) (*fileUploadResponse, error) {
-	req, err := c.newRequest(http.MethodPost, c.baseURL+"v3/upload", request)
+	body, err := encodeBodyAsJSON(request)
 	if err != nil {
 		return nil, err
 	}
+	reqParams := requestParams{
+		method:  http.MethodPost,
+		url:     c.baseURL + "v3/upload",
+		body:    body,
+		headers: c.defaultHeaders(),
+	}
 
 	uploadResponse := &fileUploadResponse{}
-	err = c.do(ctx, req, uploadResponse)
+	err = c.do(ctx, reqParams, uploadResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -140,19 +144,13 @@ upload:
 				<-concurrencyChan
 			}()
 
-			req, err := c.newUploadRequest(http.MethodPatch, c.baseURL+"v3/upload/"+fileUpload.ID.String(), bytes.NewBuffer(data))
-			if err != nil {
-				// If error channel is full already just discard this error, first error is most likely the most useful one anyways
-				select {
-				case errChan <- err:
-				default:
-				}
-				cancel()
-				return
+			reqParams := requestParams{
+				method:  http.MethodPatch,
+				url:     c.baseURL + "v3/upload/" + fileUpload.ID.String(),
+				body:    data,
+				headers: c.chunkedUploadHeaders(o),
 			}
-			req.Header.Set("X-Upload-Offset", strconv.FormatInt(o, 10))
-
-			err = c.do(uploadCtx, req, nil)
+			err = c.do(uploadCtx, reqParams, nil)
 			if err != nil {
 				// If error channel is full already just discard this error, first error is most likely the most useful one anyways
 				select {
@@ -176,22 +174,29 @@ upload:
 }
 
 func (c *Client) completeFileUpload(ctx context.Context, fileUUID uuid.UUID) error {
-	req, err := c.newRequest(http.MethodPost, c.baseURL+"v3/upload/"+fileUUID.String()+"/finish", nil)
-	if err != nil {
-		return err
+	reqParams := requestParams{
+		method:  http.MethodPost,
+		url:     c.baseURL + "v3/upload/" + fileUUID.String() + "/finish",
+		body:    nil,
+		headers: c.defaultHeaders(),
 	}
-
-	return c.do(ctx, req, nil)
+	return c.do(ctx, reqParams, nil)
 }
 
 func (c *Client) scanUploadedFile(ctx context.Context, request *ScanFileRequest, fileUUID uuid.UUID) (*ScanFileResponse, error) {
-	req, err := c.newRequest(http.MethodPost, c.baseURL+"v3/upload/"+fileUUID.String()+"/scan", request)
+	body, err := encodeBodyAsJSON(request)
 	if err != nil {
 		return nil, err
 	}
+	reqParams := requestParams{
+		method:  http.MethodPost,
+		url:     c.baseURL + "v3/upload/" + fileUUID.String() + "/scan",
+		body:    body,
+		headers: c.defaultHeaders(),
+	}
 
 	scanResponse := &ScanFileResponse{}
-	err = c.do(ctx, req, scanResponse)
+	err = c.do(ctx, reqParams, scanResponse)
 	if err != nil {
 		return nil, err
 	}

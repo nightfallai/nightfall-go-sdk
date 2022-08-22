@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"runtime/debug"
+	"strconv"
 	"time"
 )
 
@@ -108,7 +109,33 @@ func loadUserAgent() string {
 	return prefix
 }
 
-func (c *Client) newRequest(method, urlStr string, body interface{}) (*http.Request, error) {
+type requestParams struct {
+	method  string
+	url     string
+	body    []byte
+	headers map[string]string
+}
+
+func (c *Client) defaultHeaders() map[string]string {
+	headers := map[string]string{
+		"Content-Type":  "application/json",
+		"Authorization": "Bearer " + c.apiKey,
+		"User-Agent":    userAgent,
+	}
+	return headers
+}
+
+func (c *Client) chunkedUploadHeaders(o int64) map[string]string {
+	headers := map[string]string{
+		"X-Upload-Offset": strconv.FormatInt(o, 10),
+		"Content-Type":    "application/octet-stream",
+		"Authorization":   "Bearer " + c.apiKey,
+		"User-Agent":      userAgent,
+	}
+	return headers
+}
+
+func encodeBodyAsJSON(body interface{}) ([]byte, error) {
 	var buf io.ReadWriter
 	if body != nil {
 		buf = &bytes.Buffer{}
@@ -120,35 +147,23 @@ func (c *Client) newRequest(method, urlStr string, body interface{}) (*http.Requ
 			return nil, err
 		}
 	}
-
-	req, err := http.NewRequest(method, urlStr, buf)
+	b, err := io.ReadAll(buf)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+c.apiKey)
-	req.Header.Set("User-Agent", userAgent)
-
-	return req, nil
+	return b, nil
 }
 
-func (c *Client) newUploadRequest(method, urlStr string, reader io.Reader) (*http.Request, error) {
-	req, err := http.NewRequest(method, urlStr, reader)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Content-Type", "application/octet-stream")
-	req.Header.Set("Authorization", "Bearer "+c.apiKey)
-	req.Header.Set("User-Agent", userAgent)
-
-	return req, nil
-}
-
-func (c *Client) do(ctx context.Context, req *http.Request, retResp interface{}) error {
-	req = req.WithContext(ctx)
-
+func (c *Client) do(ctx context.Context, reqParams requestParams, retResp interface{}) error {
 	for attempt := 1; attempt <= c.retryCount+1; attempt++ {
-		err := func() error {
+		req, err := http.NewRequestWithContext(ctx, reqParams.method, reqParams.url, bytes.NewReader(reqParams.body))
+		if err != nil {
+			return err
+		}
+		for k, v := range reqParams.headers {
+			req.Header.Set(k, v)
+		}
+		err = func() error {
 			resp, err := c.httpClient.Do(req)
 			if err != nil {
 				select {
@@ -196,7 +211,7 @@ func (c *Client) do(ctx context.Context, req *http.Request, retResp interface{})
 	return nil
 }
 
-// The error model returned by Nightfall API requests that are unsuccessful. This object is generally returned
+// Error is the struct returned by Nightfall API requests that are unsuccessful. This struct is generally returned
 // when the HTTP status code is outside the range 200-299.
 type Error struct {
 	Code           int               `json:"code"`

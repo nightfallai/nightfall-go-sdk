@@ -64,16 +64,16 @@ func TestDo(t *testing.T) {
 		t.Fatal("Error initializing client")
 	}
 
-	req, err := client.newRequest(http.MethodPost, s.URL, nil)
-	if err != nil {
-		t.Fatal("Error initializing request")
+	reqParams := requestParams{
+		method: http.MethodPost,
+		url:    s.URL,
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			callCount = 0
 			s.Config.Handler = test.handler
-			err = client.do(context.Background(), req, nil)
+			err = client.do(context.Background(), reqParams, nil)
 			if !test.wantErr && err != nil {
 				t.Errorf("Got unexpected error: %v", err)
 			}
