@@ -31,6 +31,12 @@ type Client struct {
 	retryCount            int
 }
 
+// Set the base URL to a different value. Needed to use the client with
+// Nightfall's dev or staging environments.
+func (c *Client) SetBaseURL(baseURL string) {
+	c.baseURL = baseURL
+}
+
 // ClientOption defines an option for a Client
 type ClientOption func(*Client) error
 
