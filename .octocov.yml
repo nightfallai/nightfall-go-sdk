@@ -1,5 +1,5 @@
 coverage:
-  acceptable: current >= 80%
+  acceptable: current >= 89%
 codeToTestRatio:
   code:
     - '**/*.go'
