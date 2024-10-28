@@ -10,7 +10,7 @@ Additionally, this library provides convenient features including a streamlined 
 To obtain an API Key, login to the [Nightfall dashboard](https://app.nightfall.ai/) and click the section
 titled "Manage API Keys".
 
-See our [developer documentation](https://docs.nightfall.ai/docs/entities-and-terms-to-know) for more details about
+See our [developer documentation](https://help.nightfall.ai/firewall-for-ai/key-concepts/entities-and-terms-to-know) for more details about
 integrating with the Nightfall API.
 
 ## Installation ##
@@ -43,11 +43,11 @@ original files, and then we'll handle the heavy lifting.
 
 The file upload process is implemented as a series of requests to upload the file in chunks. The library
 provides a single method that wraps the steps required to upload your file. Please refer to the
-[API Reference](https://docs.nightfall.ai/reference) for more details.
+[API Reference](https://help.nightfall.ai/firewall-for-ai/nightfall-apis/dlp-apis-firewall-for-ai-platform) for more details.
 
 The file is uploaded synchronously, but as files can be arbitrarily large, the scan itself is conducted asynchronously.
 The results from the scan are delivered by webhook; for more information about setting up a webhook server, refer to
-[the docs](https://docs.nightfall.ai/docs/creating-a-webhook-server).
+[the docs](https://help.nightfall.ai/firewall-for-ai/key-concepts/scanning-files/webhooks-and-asynchronous-notifications/creating-a-webhook-server).
 
 #### Sample Code
 
